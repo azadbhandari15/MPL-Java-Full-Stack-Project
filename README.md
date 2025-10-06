@@ -1,4 +1,4 @@
-#This is the live auction tracking app for the cricket tournament that can be hosted on a website
+# This is the live auction tracking app for the cricket tournament that can be hosted on a website
 ## Tools and Stacks Uses
 ### Front End
 React.JS
