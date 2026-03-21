@@ -1,7 +1,11 @@
-import { useState, useEffect, useCallback } from 'react'
+import { useState, useEffect, useCallback, useRef, use } from 'react'
 import { RotatingLines } from 'react-loader-spinner';
 import './App.css'
 import './tailwind.css'
+import unsoldSound from "./assets/super-mario-game-over.mp3";
+import soldSound from "./assets/Meri Selection Ho gayi.mp3";
+
+
 
 // Define the initial default purses outside the component
 const DEFAULT_PURSES = {
@@ -41,6 +45,10 @@ const getInitialPurses = () => {
 };
 
 function App() {
+
+  const soldAudioRef = useRef(null);
+  const unsoldAudioRef = useRef(null);
+
   const [currentBid, setCurrentBid] = useState(100);
   const [selectedTeam, setSelectedTeam] = useState("");
   const [auctionStatus, setAuctionStatus] = useState("active");
@@ -59,6 +67,11 @@ function App() {
   useEffect(() => {
     localStorage.setItem('teamPurses', JSON.stringify(teamPurses));
   }, [teamPurses]);
+
+  useEffect(() => {
+    soldAudioRef.current = new Audio(soldSound);
+    unsoldAudioRef.current = new Audio(unsoldSound);
+  }, []);
 
   const fetchPlayerData = useCallback(async () => {
     console.log("Fetching player data...");
@@ -148,6 +161,11 @@ function App() {
       alert("Please select a team before marking as sold.");
       return;
     }
+
+    if(soldAudioRef.current){
+    soldAudioRef.current.currentTime=0;
+    soldAudioRef.current.play();
+  }
     setLoading(true);
 
     try {
@@ -211,6 +229,10 @@ function App() {
 
   const handlePass = async () => {
     setLoading(true);
+    if(unsoldAudioRef.current){
+    unsoldAudioRef.current.currentTime=0;
+    unsoldAudioRef.current.play();
+    }
     try {
       const updatedResponse = await fetch('http://localhost:8080/sell-player', {
         method: 'POST',
