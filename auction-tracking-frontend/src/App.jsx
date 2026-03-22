@@ -4,6 +4,7 @@ import './App.css'
 import './tailwind.css'
 import unsoldSound from "./assets/super-mario-game-over.mp3";
 import soldSound from "./assets/Meri Selection Ho gayi.mp3";
+import bidSound from "./assets/faahhh.mp3";
 
 
 
@@ -48,6 +49,7 @@ function App() {
 
   const soldAudioRef = useRef(null);
   const unsoldAudioRef = useRef(null);
+  const bidAudioRef = useRef(null);
 
   const [currentBid, setCurrentBid] = useState(100);
   const [selectedTeam, setSelectedTeam] = useState("");
@@ -71,6 +73,7 @@ function App() {
   useEffect(() => {
     soldAudioRef.current = new Audio(soldSound);
     unsoldAudioRef.current = new Audio(unsoldSound);
+    bidAudioRef.current=new Audio(bidSound);
   }, []);
 
   const fetchPlayerData = useCallback(async () => {
@@ -147,6 +150,11 @@ function App() {
   }
 
   const handleTeamBid = (teamName) => {
+
+    if(bidAudioRef.current){
+      bidAudioRef.current.currentTime=0;
+      bidAudioRef.current.play();
+    }
     setSelectedTeam(teamName);
     if(firstBid){
       firstBid=false;
